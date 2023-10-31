@@ -1,6 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import * as Fonts from "expo-font";
+import { useCallback, useState } from "react";
+import { useFonts } from "expo-font";
 import {
   StyleSheet,
   Text,
@@ -12,12 +11,9 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
-Icon.loadFont();
+import * as SplashScreen from "expo-splash-screen";
 
 //fuentes
-Fonts.loadAsync({
-  Lalezar33: require("../font/Lalezar-Regular.ttf"),
-});
 
 export default function Login() {
   const navigation = useNavigation();
@@ -27,6 +23,19 @@ export default function Login() {
     email: "",
     password: "",
   });
+
+  const [fontsLoaded] = useFonts({
+    Lalezar33: require("../font/Lalezar-Regular.ttf"),
+  });
+
+  const onLayoutView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const handleInput = (event) => {
     const { placeholder, value } = event.target;
@@ -52,7 +61,7 @@ export default function Login() {
     }
   };
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={onLayoutView}>
       <Image
         source={require("../assets/logo.png")}
         style={{
@@ -82,7 +91,7 @@ export default function Login() {
         <Text
           style={{
             color: "red",
-            fontFamily: "Lalezar3",
+            fontFamily: "Lalezar33",
             margin: 10,
             fontSize: 20,
           }}
@@ -91,8 +100,17 @@ export default function Login() {
         </Text>
       )}
       <View>
-        <Pressable onPress={handleSubmit} style={login.button}>
-          <Text style={login.button.letter}>entrar</Text>
+        <Pressable onPress={handleSubmit} style={login}>
+          <Text
+            style={{
+              color: "white",
+              fontFamily: "Lalezar33",
+              textAlign: "center",
+              fontSize: 20,
+            }}
+          >
+            entrar
+          </Text>
         </Pressable>
       </View>
     </View>
@@ -136,21 +154,12 @@ const styles = StyleSheet.create({
 });
 
 const login = StyleSheet.create({
-  button: {
-    letter: {
-      color: "white",
-      fontFamily: "Lalezar33",
-      textAlign: "center",
-      verticalAlign: "center",
-      fontSize: 20,
-    },
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "white",
-    backgroundColor: "#de4a97",
-    borderRadius: 41,
-    width: 300,
-    height: "44px",
-  },
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "white",
+  backgroundColor: "#de4a97",
+  borderRadius: 41,
+  width: 300,
+  height: "44px",
 });

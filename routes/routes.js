@@ -9,10 +9,18 @@ const Routes = () => {
   const { Navigator, Screen } = createNativeStackNavigator();
   return (
     <NavigationContainer>
-      <Navigator initialRouteName="Home">
-        <Screen name="Login" component={Login} />
-        <Screen name="Home" component={Home} />
-        <Screen name="GameContUI" component={GameContUI} />
+      <Navigator initialRouteName="Login">
+        <Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={Login}
+        />
+        <Screen options={{ headerShown: false }} name="Home" component={Home} />
+        <Screen
+          options={{ headerShown: false }}
+          name="GameContUI"
+          component={GameContUI}
+        />
       </Navigator>
     </NavigationContainer>
   );
